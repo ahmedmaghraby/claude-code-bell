@@ -1,17 +1,19 @@
 import { execFile } from 'child_process';
 
-export type SoundEvent = 'stop' | 'permission' | 'clarification';
+export type SoundEvent = 'stop' | 'permission' | 'clarification' | 'plan';
 
 const MAC_DEFAULTS: Record<SoundEvent, string> = {
   stop:          '/System/Library/Sounds/Glass.aiff',
   permission:    '/System/Library/Sounds/Funk.aiff',
   clarification: '/System/Library/Sounds/Ping.aiff',
+  plan:          '/System/Library/Sounds/Hero.aiff',
 };
 
 const WIN_DEFAULTS: Record<SoundEvent, string> = {
   stop:          'Asterisk',
   permission:    'Exclamation',
   clarification: 'Beep',
+  plan:          'Asterisk',
 };
 
 export function playSound(eventType: SoundEvent, override?: string): void {

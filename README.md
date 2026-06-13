@@ -16,6 +16,7 @@ A VS Code extension that plays distinct sounds and shows system-level notificati
 |---|---|---|---|
 | Task complete | Claude finished your request | Glass | Asterisk |
 | Approval needed | Claude wants permission to run a command | Funk | Exclamation |
+| Plan ready | Claude finished planning and needs your review | Hero | Asterisk |
 | Input needed | Claude needs clarification or more info | Ping | Beep |
 
 ## Installation
@@ -47,14 +48,15 @@ macOS requires notification permission for the underlying notifier tool. To allo
 
 | Setting | Default | Description |
 |---|---|---|
-| `claudeCodeNotifier.enabled` | `true` | Master on/off switch |
-| `claudeCodeNotifier.port` | `3457` | HTTP port for the hook server |
-| `claudeCodeNotifier.soundEnabled` | `true` | Play sounds |
-| `claudeCodeNotifier.systemNotificationsEnabled` | `true` | Show OS-level notifications |
-| `claudeCodeNotifier.autoApprove` | `false` | ⚠️ Auto-approve all permission requests |
-| `claudeCodeNotifier.sounds.stop` | *(default)* | Custom sound file for task complete |
-| `claudeCodeNotifier.sounds.permission` | *(default)* | Custom sound file for approval needed |
-| `claudeCodeNotifier.sounds.clarification` | *(default)* | Custom sound file for input needed |
+| `claudeCodeBell.enabled` | `true` | Master on/off switch |
+| `claudeCodeBell.port` | `3457` | HTTP port for the hook server |
+| `claudeCodeBell.soundEnabled` | `true` | Play sounds |
+| `claudeCodeBell.systemNotificationsEnabled` | `true` | Show OS-level notifications |
+| `claudeCodeBell.autoApprove` | `false` | ⚠️ Auto-approve all permission requests |
+| `claudeCodeBell.sounds.stop` | *(default)* | Custom sound file for task complete |
+| `claudeCodeBell.sounds.permission` | *(default)* | Custom sound file for approval needed |
+| `claudeCodeBell.sounds.plan` | *(default)* | Custom sound file for plan review |
+| `claudeCodeBell.sounds.clarification` | *(default)* | Custom sound file for input needed |
 
 ### Custom sounds
 
@@ -63,7 +65,7 @@ Set any setting to a file path to override the default:
 - Windows: `.wav` files work with `SoundPlayer`
 
 ```json
-"claudeCodeNotifier.sounds.stop": "/Users/you/sounds/done.mp3"
+"claudeCodeBell.sounds.stop": "/Users/you/sounds/done.mp3"
 ```
 
 ## Commands
@@ -106,14 +108,14 @@ When the extension is disabled or uninstalled, these entries are removed automat
 ## Troubleshooting
 
 **No sound plays**
-- Check `claudeCodeNotifier.soundEnabled` is `true`
+- Check `claudeCodeBell.soundEnabled` is `true`
 - macOS: make sure your volume is on and not muted
 - Try running in Terminal: `afplay /System/Library/Sounds/Glass.aiff`
 
 **No system notification appears**
 - Run `Claude Code Bell: Test Notification` from the Command Palette
 - macOS: grant notification permission in System Settings → Notifications
-- Check `claudeCodeNotifier.systemNotificationsEnabled` is `true`
+- Check `claudeCodeBell.systemNotificationsEnabled` is `true`
 
 **Auto-approve panel still shows**
 - Restart Claude Code (close and reopen the terminal / start a new session)
@@ -121,7 +123,7 @@ When the extension is disabled or uninstalled, these entries are removed automat
 
 **Server not running / hooks not firing**
 - Run `Claude Code Bell: Show Server Status`
-- If the port is in use, change `claudeCodeNotifier.port` and run `Restart Hook Server`
+- If the port is in use, change `claudeCodeBell.port` and run `Restart Hook Server`
 - Verify `~/.claude/settings.json` contains the hook entries
 
 ## Privacy

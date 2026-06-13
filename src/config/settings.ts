@@ -10,6 +10,7 @@ export interface NotifierConfig {
     stop: string;
     permission: string;
     clarification: string;
+    plan: string;
   };
 }
 
@@ -25,6 +26,7 @@ export function getConfig(): NotifierConfig {
       stop: cfg.get<string>('sounds.stop', ''),
       permission: cfg.get<string>('sounds.permission', ''),
       clarification: cfg.get<string>('sounds.clarification', ''),
+      plan: cfg.get<string>('sounds.plan', ''),
     },
   };
 }

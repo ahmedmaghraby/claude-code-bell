@@ -2,7 +2,7 @@
   "name": "claude-code-bell",
   "displayName": "Claude Code Bell",
   "description": "Plays distinct sounds and shows system notifications when Claude Code finishes tasks, needs approval, or needs clarification. Works on macOS and Windows, even when VS Code is not in focus.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "icon": "icon.png",
   "publisher": "ahmedmaghraby",
   "license": "MIT",
@@ -75,6 +75,11 @@
           "type": "string",
           "default": "",
           "description": "Override the sound file for clarification/notification events. Leave empty for default (Ping.aiff / Beep)."
+        },
+        "claudeCodeBell.sounds.plan": {
+          "type": "string",
+          "default": "",
+          "description": "Override the sound file for plan review notifications. Leave empty for default (Hero.aiff / Asterisk)."
         }
       }
     },

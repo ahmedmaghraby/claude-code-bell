@@ -90,16 +90,39 @@ function handleEvent(eventType: string, payload: HookPayload, res: http.ServerRe
       break;
     }
 
-    case 'Notification':
-    case 'Elicitation': {
-      const nPayload = payload as { message?: string; prompt?: string };
-      const detail = nPayload.message ?? nPayload.prompt ?? 'Needs your input';
+    case 'Notification': {
+      const nPayload = payload as { message?: string };
+      const detail = nPayload.message ?? 'Notification';
       if (config.soundEnabled) { playSound('clarification', config.sounds.clarification || undefined); }
       const msg = `[${project}] ${detail}`;
       if (config.systemNotificationsEnabled) { showSystemNotification('Claude Code — Input Needed', msg); }
       showVSCodeNotification('warning', msg);
       updateStatusBar('$(comment)', msg);
-      track('hook_fired', { eventType, project });
+      track('hook_fired', { eventType: 'Notification', project });
+      res.writeHead(200);
+      res.end(JSON.stringify({ ok: true }));
+      break;
+    }
+
+    case 'Elicitation': {
+      const ePayload = payload as { message?: string; prompt?: string };
+      const detail = ePayload.message ?? ePayload.prompt ?? 'Needs your input';
+      const isPlan = /\bplan\b|\bapprove\b|\breview\b|\baccept\b/i.test(detail);
+      if (isPlan) {
+        if (config.soundEnabled) { playSound('plan', config.sounds.plan || undefined); }
+        const msg = `[${project}] Plan ready for review`;
+        if (config.systemNotificationsEnabled) { showSystemNotification('Claude Code — Plan Ready', msg); }
+        showVSCodeNotification('warning', `[${project}] Plan ready — open Claude Code to approve or reject`);
+        updateStatusBar('$(checklist)', msg);
+        track('hook_fired', { eventType: 'Elicitation', subtype: 'plan', project });
+      } else {
+        if (config.soundEnabled) { playSound('clarification', config.sounds.clarification || undefined); }
+        const msg = `[${project}] ${detail}`;
+        if (config.systemNotificationsEnabled) { showSystemNotification('Claude Code — Input Needed', msg); }
+        showVSCodeNotification('warning', msg);
+        updateStatusBar('$(comment)', msg);
+        track('hook_fired', { eventType: 'Elicitation', subtype: 'input', project });
+      }
       res.writeHead(200);
       res.end(JSON.stringify({ ok: true }));
       break;

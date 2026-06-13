@@ -6,11 +6,13 @@ const MAC_DEFAULTS = {
     stop: '/System/Library/Sounds/Glass.aiff',
     permission: '/System/Library/Sounds/Funk.aiff',
     clarification: '/System/Library/Sounds/Ping.aiff',
+    plan: '/System/Library/Sounds/Hero.aiff',
 };
 const WIN_DEFAULTS = {
     stop: 'Asterisk',
     permission: 'Exclamation',
     clarification: 'Beep',
+    plan: 'Asterisk',
 };
 function playSound(eventType, override) {
     if (process.platform === 'darwin') {

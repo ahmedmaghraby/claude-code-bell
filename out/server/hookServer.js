@@ -132,10 +132,9 @@ function handleEvent(eventType, payload, res) {
             }
             break;
         }
-        case 'Notification':
-        case 'Elicitation': {
+        case 'Notification': {
             const nPayload = payload;
-            const detail = nPayload.message ?? nPayload.prompt ?? 'Needs your input';
+            const detail = nPayload.message ?? 'Notification';
             if (config.soundEnabled) {
                 (0, soundPlayer_1.playSound)('clarification', config.sounds.clarification || undefined);
             }
@@ -145,7 +144,39 @@ function handleEvent(eventType, payload, res) {
             }
             (0, vscodeNotifier_1.showVSCodeNotification)('warning', msg);
             (0, extension_1.updateStatusBar)('$(comment)', msg);
-            (0, analytics_1.track)('hook_fired', { eventType, project });
+            (0, analytics_1.track)('hook_fired', { eventType: 'Notification', project });
+            res.writeHead(200);
+            res.end(JSON.stringify({ ok: true }));
+            break;
+        }
+        case 'Elicitation': {
+            const ePayload = payload;
+            const detail = ePayload.message ?? ePayload.prompt ?? 'Needs your input';
+            const isPlan = /\bplan\b|\bapprove\b|\breview\b|\baccept\b/i.test(detail);
+            if (isPlan) {
+                if (config.soundEnabled) {
+                    (0, soundPlayer_1.playSound)('plan', config.sounds.plan || undefined);
+                }
+                const msg = `[${project}] Plan ready for review`;
+                if (config.systemNotificationsEnabled) {
+                    (0, systemNotifier_1.showSystemNotification)('Claude Code — Plan Ready', msg);
+                }
+                (0, vscodeNotifier_1.showVSCodeNotification)('warning', `[${project}] Plan ready — open Claude Code to approve or reject`);
+                (0, extension_1.updateStatusBar)('$(checklist)', msg);
+                (0, analytics_1.track)('hook_fired', { eventType: 'Elicitation', subtype: 'plan', project });
+            }
+            else {
+                if (config.soundEnabled) {
+                    (0, soundPlayer_1.playSound)('clarification', config.sounds.clarification || undefined);
+                }
+                const msg = `[${project}] ${detail}`;
+                if (config.systemNotificationsEnabled) {
+                    (0, systemNotifier_1.showSystemNotification)('Claude Code — Input Needed', msg);
+                }
+                (0, vscodeNotifier_1.showVSCodeNotification)('warning', msg);
+                (0, extension_1.updateStatusBar)('$(comment)', msg);
+                (0, analytics_1.track)('hook_fired', { eventType: 'Elicitation', subtype: 'input', project });
+            }
             res.writeHead(200);
             res.end(JSON.stringify({ ok: true }));
             break;

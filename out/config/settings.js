@@ -47,6 +47,7 @@ function getConfig() {
             stop: cfg.get('sounds.stop', ''),
             permission: cfg.get('sounds.permission', ''),
             clarification: cfg.get('sounds.clarification', ''),
+            plan: cfg.get('sounds.plan', ''),
         },
     };
 }
