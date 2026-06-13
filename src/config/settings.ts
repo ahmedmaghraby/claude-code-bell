@@ -14,7 +14,7 @@ export interface NotifierConfig {
 }
 
 export function getConfig(): NotifierConfig {
-  const cfg = vscode.workspace.getConfiguration('claudeCodeNotifier');
+  const cfg = vscode.workspace.getConfiguration('claudeCodeBell');
   return {
     enabled: cfg.get<boolean>('enabled', true),
     port: cfg.get<number>('port', 3457),

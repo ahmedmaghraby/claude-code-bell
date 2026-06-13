@@ -1,14 +1,14 @@
 {
-  "name": "claude-code-notifier",
-  "displayName": "Claude Code Notifier",
+  "name": "claude-code-bell",
+  "displayName": "Claude Code Bell",
   "description": "Plays distinct sounds and shows system notifications when Claude Code finishes tasks, needs approval, or needs clarification. Works on macOS and Windows, even when VS Code is not in focus.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "icon": "icon.png",
   "publisher": "ahmedmaghraby",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ahmedmaghraby/claude-code-notifier"
+    "url": "https://github.com/ahmedmaghraby/claude-code-bell"
   },
   "keywords": [
     "claude",
@@ -34,44 +34,44 @@
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
-      "title": "Claude Code Notifier",
+      "title": "Claude Code Bell",
       "properties": {
-        "claudeCodeNotifier.enabled": {
+        "claudeCodeBell.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Enable or disable all Claude Code notifications and sounds."
         },
-        "claudeCodeNotifier.port": {
+        "claudeCodeBell.port": {
           "type": "number",
           "default": 3457,
           "description": "Local HTTP port for the Claude Code hook server. Restart VS Code after changing."
         },
-        "claudeCodeNotifier.soundEnabled": {
+        "claudeCodeBell.soundEnabled": {
           "type": "boolean",
           "default": true,
           "description": "Play a sound when Claude Code events occur."
         },
-        "claudeCodeNotifier.systemNotificationsEnabled": {
+        "claudeCodeBell.systemNotificationsEnabled": {
           "type": "boolean",
           "default": true,
           "description": "Show OS-level notifications (macOS Notification Center / Windows Action Center). These appear even when VS Code is not in focus."
         },
-        "claudeCodeNotifier.autoApprove": {
+        "claudeCodeBell.autoApprove": {
           "type": "boolean",
           "default": false,
           "markdownDescription": "⚠️ **Danger**: Auto-approve ALL Claude Code permission requests without pausing. Only enable if you trust the current project fully."
         },
-        "claudeCodeNotifier.sounds.stop": {
+        "claudeCodeBell.sounds.stop": {
           "type": "string",
           "default": "",
           "description": "Override the sound file for task completion. Leave empty to use the default system sound (Glass.aiff on macOS, Asterisk on Windows)."
         },
-        "claudeCodeNotifier.sounds.permission": {
+        "claudeCodeBell.sounds.permission": {
           "type": "string",
           "default": "",
           "description": "Override the sound file for permission requests. Leave empty for default (Funk.aiff / Exclamation)."
         },
-        "claudeCodeNotifier.sounds.clarification": {
+        "claudeCodeBell.sounds.clarification": {
           "type": "string",
           "default": "",
           "description": "Override the sound file for clarification/notification events. Leave empty for default (Ping.aiff / Beep)."
@@ -80,16 +80,16 @@
     },
     "commands": [
       {
-        "command": "claudeCodeNotifier.showStatus",
-        "title": "Claude Code Notifier: Show Server Status"
+        "command": "claudeCodeBell.showStatus",
+        "title": "Claude Code Bell: Show Server Status"
       },
       {
-        "command": "claudeCodeNotifier.restartServer",
-        "title": "Claude Code Notifier: Restart Hook Server"
+        "command": "claudeCodeBell.restartServer",
+        "title": "Claude Code Bell: Restart Hook Server"
       },
       {
-        "command": "claudeCodeNotifier.testNotification",
-        "title": "Claude Code Notifier: Test Notification"
+        "command": "claudeCodeBell.testNotification",
+        "title": "Claude Code Bell: Test Notification"
       }
     ]
   },

@@ -1,4 +1,4 @@
-# Claude Code Notifier
+# Claude Code Bell
 
 A VS Code extension that plays distinct sounds and shows system-level notifications when [Claude Code](https://claude.ai/code) finishes a task, needs your approval, or needs clarification — **even when VS Code is not in focus**.
 
@@ -29,7 +29,7 @@ A VS Code extension that plays distinct sounds and shows system-level notificati
 macOS requires notification permission for the underlying notifier tool. To allow it:
 
 1. Open **System Settings** → **Notifications**
-2. Trigger a test notification first: `Cmd+Shift+P` → **Claude Code Notifier: Test Notification**
+2. Trigger a test notification first: `Cmd+Shift+P` → **Claude Code Bell: Test Notification**
 3. Find **terminal-notifier** (or **Script Editor**) in the list and set it to **Allow**
 
 > **Apple Silicon (M1/M2/M3) users:** For best performance, install the native ARM64 binary:
@@ -72,9 +72,9 @@ Open the Command Palette (`Cmd+Shift+P`) and search for:
 
 | Command | Description |
 |---|---|
-| `Claude Code Notifier: Show Server Status` | Shows port and auto-approve state |
-| `Claude Code Notifier: Restart Hook Server` | Restart after changing the port |
-| `Claude Code Notifier: Test Notification` | Fire a test sound + system notification |
+| `Claude Code Bell: Show Server Status` | Shows port and auto-approve state |
+| `Claude Code Bell: Restart Hook Server` | Restart after changing the port |
+| `Claude Code Bell: Test Notification` | Fire a test sound + system notification |
 
 ## Auto-Approve
 
@@ -111,7 +111,7 @@ When the extension is disabled or uninstalled, these entries are removed automat
 - Try running in Terminal: `afplay /System/Library/Sounds/Glass.aiff`
 
 **No system notification appears**
-- Run `Claude Code Notifier: Test Notification` from the Command Palette
+- Run `Claude Code Bell: Test Notification` from the Command Palette
 - macOS: grant notification permission in System Settings → Notifications
 - Check `claudeCodeNotifier.systemNotificationsEnabled` is `true`
 
@@ -120,7 +120,7 @@ When the extension is disabled or uninstalled, these entries are removed automat
 - `permissions.defaultMode: "bypassPermissions"` is read at session start
 
 **Server not running / hooks not firing**
-- Run `Claude Code Notifier: Show Server Status`
+- Run `Claude Code Bell: Show Server Status`
 - If the port is in use, change `claudeCodeNotifier.port` and run `Restart Hook Server`
 - Verify `~/.claude/settings.json` contains the hook entries
 

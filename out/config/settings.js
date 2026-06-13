@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getConfig = getConfig;
 const vscode = __importStar(require("vscode"));
 function getConfig() {
-    const cfg = vscode.workspace.getConfiguration('claudeCodeNotifier');
+    const cfg = vscode.workspace.getConfiguration('claudeCodeBell');
     return {
         enabled: cfg.get('enabled', true),
         port: cfg.get('port', 3457),
