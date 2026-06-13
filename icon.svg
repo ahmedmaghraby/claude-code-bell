@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="#1e1e2e"/>
+
+  <!-- Bell body -->
+  <path d="M64 22 C44 22 32 38 32 56 L32 72 L24 80 L24 86 L104 86 L104 80 L96 72 L96 56 C96 38 84 22 64 22Z"
+        fill="#c084fc" opacity="0.95"/>
+
+  <!-- Bell top knob -->
+  <circle cx="64" cy="22" r="5" fill="#c084fc"/>
+
+  <!-- Bell clapper / notification dot -->
+  <circle cx="64" cy="96" r="9" fill="#f9a8d4"/>
+
+  <!-- Sound waves (right) -->
+  <path d="M100 48 Q110 56 110 64 Q110 72 100 80"
+        stroke="#a78bfa" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8"/>
+  <path d="M107 40 Q122 52 122 64 Q122 76 107 88"
+        stroke="#a78bfa" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.45"/>
+
+  <!-- Sound waves (left) -->
+  <path d="M28 48 Q18 56 18 64 Q18 72 28 80"
+        stroke="#a78bfa" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8"/>
+  <path d="M21 40 Q6 52 6 64 Q6 76 21 88"
+        stroke="#a78bfa" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.45"/>
+</svg>

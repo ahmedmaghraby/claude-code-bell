@@ -1,0 +1,112 @@
+{
+  "name": "claude-code-notifier",
+  "displayName": "Claude Code Notifier",
+  "description": "Plays distinct sounds and shows system notifications when Claude Code finishes tasks, needs approval, or needs clarification. Works on macOS and Windows, even when VS Code is not in focus.",
+  "version": "0.1.2",
+  "icon": "icon.png",
+  "publisher": "ahmedmaghraby",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ahmedmaghraby/claude-code-notifier"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "anthropic",
+    "notifications",
+    "sound",
+    "alerts"
+  ],
+  "galleryBanner": {
+    "color": "#1a0800",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.120.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Claude Code Notifier",
+      "properties": {
+        "claudeCodeNotifier.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable all Claude Code notifications and sounds."
+        },
+        "claudeCodeNotifier.port": {
+          "type": "number",
+          "default": 3457,
+          "description": "Local HTTP port for the Claude Code hook server. Restart VS Code after changing."
+        },
+        "claudeCodeNotifier.soundEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Play a sound when Claude Code events occur."
+        },
+        "claudeCodeNotifier.systemNotificationsEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show OS-level notifications (macOS Notification Center / Windows Action Center). These appear even when VS Code is not in focus."
+        },
+        "claudeCodeNotifier.autoApprove": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "⚠️ **Danger**: Auto-approve ALL Claude Code permission requests without pausing. Only enable if you trust the current project fully."
+        },
+        "claudeCodeNotifier.sounds.stop": {
+          "type": "string",
+          "default": "",
+          "description": "Override the sound file for task completion. Leave empty to use the default system sound (Glass.aiff on macOS, Asterisk on Windows)."
+        },
+        "claudeCodeNotifier.sounds.permission": {
+          "type": "string",
+          "default": "",
+          "description": "Override the sound file for permission requests. Leave empty for default (Funk.aiff / Exclamation)."
+        },
+        "claudeCodeNotifier.sounds.clarification": {
+          "type": "string",
+          "default": "",
+          "description": "Override the sound file for clarification/notification events. Leave empty for default (Ping.aiff / Beep)."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "claudeCodeNotifier.showStatus",
+        "title": "Claude Code Notifier: Show Server Status"
+      },
+      {
+        "command": "claudeCodeNotifier.restartServer",
+        "title": "Claude Code Notifier: Restart Hook Server"
+      },
+      {
+        "command": "claudeCodeNotifier.testNotification",
+        "title": "Claude Code Notifier: Test Notification"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/node-notifier": "^8.0.5",
+    "@types/vscode": "^1.120.0",
+    "@vscode/vsce": "^3.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "node-notifier": "^10.0.1",
+    "posthog-node": "^5.21.2"
+  }
+}
