@@ -14,6 +14,7 @@ function buildHookEntries(port: number): Record<string, object> {
   };
 }
 
+
 /** Merges required hooks into ~/.claude/settings.json. Returns true if the file was changed. */
 export function ensureClaudeHooks(port: number): boolean {
   const hooks = buildHookEntries(port);
@@ -31,10 +32,9 @@ export function ensureClaudeHooks(port: number): boolean {
   for (const [event, hookEntry] of Object.entries(hooks)) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const existing: any[] = settings.hooks[event] ?? [];
+    const targetUrl = `http://127.0.0.1:${port}/hook/${event}`;
     const alreadyPresent = existing.some((group: any) =>
-      group.hooks?.some((h: any) =>
-        typeof h.url === 'string' && h.url.includes(`/hook/${event}`)
-      )
+      group.hooks?.some((h: any) => h.url === targetUrl)
     );
     if (!alreadyPresent) {
       settings.hooks[event] = [...existing, { hooks: [hookEntry] }];
@@ -89,10 +89,9 @@ export function removeClaudeHooks(port: number): void {
 
   for (const event of Object.keys(buildHookEntries(port))) {
     if (!settings.hooks[event]) { continue; }
+    const exactUrl = `http://127.0.0.1:${port}/hook/${event}`;
     settings.hooks[event] = settings.hooks[event].filter((group: any) =>
-      !group.hooks?.some((h: any) =>
-        typeof h.url === 'string' && h.url.includes(`/hook/${event}`)
-      )
+      !group.hooks?.some((h: any) => h.url === exactUrl)
     );
     if (settings.hooks[event].length === 0) { delete settings.hooks[event]; }
   }

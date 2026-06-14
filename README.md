@@ -8,6 +8,8 @@ A VS Code extension that plays distinct sounds and shows system-level notificati
 - **System notifications** — appear in macOS Notification Center or Windows Action Center even when VS Code is minimized or in the background
 - **Distinct sounds** per event type so you know what happened without looking
 - **Project name in every notification** — know which task finished when you have multiple projects open
+- **Multi-window support** — open as many VS Code windows as you like; each window auto-finds a free port (3457–3467) with no errors
+- **Auto-restart** — the hook server silently restarts every 2 hours to prevent silent failures
 - **Auto-approve** — optionally bypass all Claude Code permission prompts automatically
 
 ## Event Types & Sounds

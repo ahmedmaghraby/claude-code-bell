@@ -70,7 +70,8 @@ function ensureClaudeHooks(port) {
     for (const [event, hookEntry] of Object.entries(hooks)) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const existing = settings.hooks[event] ?? [];
-        const alreadyPresent = existing.some((group) => group.hooks?.some((h) => typeof h.url === 'string' && h.url.includes(`/hook/${event}`)));
+        const targetUrl = `http://127.0.0.1:${port}/hook/${event}`;
+        const alreadyPresent = existing.some((group) => group.hooks?.some((h) => h.url === targetUrl));
         if (!alreadyPresent) {
             settings.hooks[event] = [...existing, { hooks: [hookEntry] }];
             changed = true;
@@ -139,7 +140,8 @@ function removeClaudeHooks(port) {
         if (!settings.hooks[event]) {
             continue;
         }
-        settings.hooks[event] = settings.hooks[event].filter((group) => !group.hooks?.some((h) => typeof h.url === 'string' && h.url.includes(`/hook/${event}`)));
+        const exactUrl = `http://127.0.0.1:${port}/hook/${event}`;
+        settings.hooks[event] = settings.hooks[event].filter((group) => !group.hooks?.some((h) => h.url === exactUrl));
         if (settings.hooks[event].length === 0) {
             delete settings.hooks[event];
         }

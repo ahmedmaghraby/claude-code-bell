@@ -53,17 +53,26 @@ function updateStatusBar(icon, text) {
     statusBar.show();
 }
 async function startServer(port) {
-    const server = new hookServer_1.HookServer(port);
-    try {
-        await server.start();
-        return server;
+    for (let p = port; p <= port + 10; p++) {
+        const server = new hookServer_1.HookServer(p);
+        try {
+            await server.start();
+            if (p !== port) {
+                vscode.window.showInformationMessage(`Claude Code Bell: port ${port} in use, started on ${p}.`);
+            }
+            return server;
+        }
+        catch (err) {
+            const msg = err instanceof Error ? err.message : String(err);
+            if (!msg.includes('EADDRINUSE') || p === port + 10) {
+                (0, analytics_1.track)('server_start_failed', { port: p, error: msg });
+                vscode.window.showErrorMessage(`Claude Code Bell: failed to start server. ${msg}`);
+                return null;
+            }
+            // EADDRINUSE → try next port silently
+        }
     }
-    catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        (0, analytics_1.track)('server_start_failed', { port, error: msg });
-        vscode.window.showErrorMessage(`Claude Code Bell: failed to start server on port ${port}. ${msg}`);
-        return null;
-    }
+    return null;
 }
 async function activate(context) {
     const config = (0, settings_1.getConfig)();
@@ -93,8 +102,32 @@ async function activate(context) {
     // Start the hook server
     hookServer = await startServer(config.port);
     if (hookServer) {
-        statusBar.text = `$(bell) Claude Notifier :${config.port}`;
+        currentPort = hookServer.getPort();
+        if (currentPort !== config.port) {
+            try {
+                (0, claudeSettingsManager_1.ensureClaudeHooks)(currentPort);
+            }
+            catch { /* non-fatal */ }
+        }
+        statusBar.text = `$(bell) Claude Notifier :${currentPort}`;
     }
+    // Auto-restart every 2 hours to prevent silent server failures
+    const RESTART_INTERVAL_MS = 2 * 60 * 60 * 1000;
+    const restartTimer = setInterval(async () => {
+        if (hookServer) {
+            await hookServer.stop();
+            hookServer = await startServer(config.port);
+            if (hookServer) {
+                currentPort = hookServer.getPort();
+                try {
+                    (0, claudeSettingsManager_1.ensureClaudeHooks)(currentPort);
+                }
+                catch { /* non-fatal */ }
+                updateStatusBar('$(bell)', `Claude Notifier :${currentPort}`);
+            }
+        }
+    }, RESTART_INTERVAL_MS);
+    context.subscriptions.push({ dispose: () => clearInterval(restartTimer) });
     // Command: show server status
     context.subscriptions.push(vscode.commands.registerCommand('claudeCodeBell.showStatus', () => {
         const cfg = (0, settings_1.getConfig)();
@@ -109,15 +142,15 @@ async function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('claudeCodeBell.restartServer', async () => {
         await hookServer?.stop();
         const newConfig = (0, settings_1.getConfig)();
-        currentPort = newConfig.port;
-        try {
-            (0, claudeSettingsManager_1.ensureClaudeHooks)(newConfig.port);
-        }
-        catch { /* non-fatal */ }
         hookServer = await startServer(newConfig.port);
         if (hookServer) {
-            statusBar.text = `$(bell) Claude Notifier :${newConfig.port}`;
-            vscode.window.showInformationMessage(`Claude Code Bell restarted on port ${newConfig.port}.`);
+            currentPort = hookServer.getPort();
+            try {
+                (0, claudeSettingsManager_1.ensureClaudeHooks)(currentPort);
+            }
+            catch { /* non-fatal */ }
+            statusBar.text = `$(bell) Claude Notifier :${currentPort}`;
+            vscode.window.showInformationMessage(`Claude Code Bell restarted on port ${currentPort}.`);
         }
     }));
     // Command: test notification

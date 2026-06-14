@@ -2,7 +2,7 @@
   "name": "claude-code-bell",
   "displayName": "Claude Code Bell",
   "description": "Plays distinct sounds and shows system notifications when Claude Code finishes tasks, needs approval, or needs clarification. Works on macOS and Windows, even when VS Code is not in focus.",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "icon": "icon.png",
   "publisher": "ahmedmaghraby",
   "license": "MIT",

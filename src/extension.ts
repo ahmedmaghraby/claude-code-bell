@@ -18,18 +18,27 @@ export function updateStatusBar(icon: string, text: string): void {
 }
 
 async function startServer(port: number): Promise<HookServer | null> {
-  const server = new HookServer(port);
-  try {
-    await server.start();
-    return server;
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
-    track('server_start_failed', { port, error: msg });
-    vscode.window.showErrorMessage(
-      `Claude Code Bell: failed to start server on port ${port}. ${msg}`
-    );
-    return null;
+  for (let p = port; p <= port + 10; p++) {
+    const server = new HookServer(p);
+    try {
+      await server.start();
+      if (p !== port) {
+        vscode.window.showInformationMessage(
+          `Claude Code Bell: port ${port} in use, started on ${p}.`
+        );
+      }
+      return server;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (!msg.includes('EADDRINUSE') || p === port + 10) {
+        track('server_start_failed', { port: p, error: msg });
+        vscode.window.showErrorMessage(`Claude Code Bell: failed to start server. ${msg}`);
+        return null;
+      }
+      // EADDRINUSE → try next port silently
+    }
   }
+  return null;
 }
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
@@ -67,8 +76,27 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // Start the hook server
   hookServer = await startServer(config.port);
   if (hookServer) {
-    statusBar.text = `$(bell) Claude Notifier :${config.port}`;
+    currentPort = hookServer.getPort();
+    if (currentPort !== config.port) {
+      try { ensureClaudeHooks(currentPort); } catch { /* non-fatal */ }
+    }
+    statusBar.text = `$(bell) Claude Notifier :${currentPort}`;
   }
+
+  // Auto-restart every 2 hours to prevent silent server failures
+  const RESTART_INTERVAL_MS = 2 * 60 * 60 * 1000;
+  const restartTimer = setInterval(async () => {
+    if (hookServer) {
+      await hookServer.stop();
+      hookServer = await startServer(config.port);
+      if (hookServer) {
+        currentPort = hookServer.getPort();
+        try { ensureClaudeHooks(currentPort); } catch { /* non-fatal */ }
+        updateStatusBar('$(bell)', `Claude Notifier :${currentPort}`);
+      }
+    }
+  }, RESTART_INTERVAL_MS);
+  context.subscriptions.push({ dispose: () => clearInterval(restartTimer) });
 
   // Command: show server status
   context.subscriptions.push(
@@ -89,13 +117,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.commands.registerCommand('claudeCodeBell.restartServer', async () => {
       await hookServer?.stop();
       const newConfig = getConfig();
-      currentPort = newConfig.port;
-      try { ensureClaudeHooks(newConfig.port); } catch { /* non-fatal */ }
       hookServer = await startServer(newConfig.port);
       if (hookServer) {
-        statusBar.text = `$(bell) Claude Notifier :${newConfig.port}`;
+        currentPort = hookServer.getPort();
+        try { ensureClaudeHooks(currentPort); } catch { /* non-fatal */ }
+        statusBar.text = `$(bell) Claude Notifier :${currentPort}`;
         vscode.window.showInformationMessage(
-          `Claude Code Bell restarted on port ${newConfig.port}.`
+          `Claude Code Bell restarted on port ${currentPort}.`
         );
       }
     })
